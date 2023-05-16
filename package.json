@@ -1,0 +1,26 @@
+{
+    "name": "chat-gpt-discord",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node ./index.js",
+        "format:check": "prettier --check .",
+        "format:write": "prettier --write .",
+        "lint:check": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "postinstall": "prettier --write . && eslint --fix ."
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "discord.js": "^14.11.0",
+        "dotenv": "^16.0.3",
+        "openai": "^3.2.1"
+    },
+    "devDependencies": {
+        "eslint": "^8.40.0",
+        "eslint-config-prettier": "^8.8.0",
+        "prettier": "^2.8.8"
+    }
+}
