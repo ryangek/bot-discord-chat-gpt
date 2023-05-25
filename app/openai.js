@@ -8,34 +8,18 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-async function chatGPT(message, discord) {
-    const chatSetting = await getUserChatSetting(discord.user.id);
+async function chatGPT(message) {
+    const chatSetting = await getUserChatSetting(message.author.id);
     let messageLog = [
         { role: 'system', content: chatSetting ? chatSetting.ROLE : 'You are a friendly chatbot.' },
     ];
-
-    // let prevMessages = await message.channel.messages.fetch({
-    //     limit: process.env.LIMIT,
-    // });
-    // prevMessages.reverse();
-
-    // prevMessages.forEach((msg) => {
-    //     if (msg.content.startsWith('!')) return;
-    //     if (msg.author.id !== discord.user.id && msg.author.bot) return;
-    //     if (msg.author.id !== message.author.id) return;
-
-    //     messageLog.push({
-    //         role: 'user',
-    //         content: msg.content,
-    //     });
-    // });
-
+    
     messageLog.push({
         role: 'user',
         content: message.content,
     });
 
-    insertChatHistory(messageLog, discord.user.id);
+    insertChatHistory(messageLog, message.author.id);
 
     const result = await openai.createChatCompletion({
         model: chatModel,

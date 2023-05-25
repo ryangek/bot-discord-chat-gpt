@@ -13,7 +13,7 @@ messageCreate(async (message) => {
 
     await message.channel.sendTyping();
 
-    message.reply(await chatGPT(message, discord));
+    message.reply(await chatGPT(message));
 });
 
 discord.login(process.env.TOKEN);

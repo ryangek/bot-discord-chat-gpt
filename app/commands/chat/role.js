@@ -18,6 +18,7 @@ module.exports = {
         let message = 'Sorry, I cannot working right now !';
         try {
             const user = interaction.options.getUser('user');
+            console.log(user);
             const role = interaction.options.getString('role');
             let roleMsg = `You are ${role}.`;
             message = `Updated chatbot's role as \`${role}\``;
