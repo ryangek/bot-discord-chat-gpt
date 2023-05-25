@@ -23,17 +23,17 @@ async function executeQuery(query, values = []) {
     });
 }
 
-async function executeUpdate(query, values = []) {
-    return new Promise((resolve, reject) => {
-        connection.execute(query, values, (error, results, fields) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(results);
-            }
-        });
-    });
-}
+// async function executeUpdate(query, values = []) {
+//     return new Promise((resolve, reject) => {
+//         connection.execute(query, values, (error, results, fields) => {
+//             if (error) {
+//                 reject(error);
+//             } else {
+//                 resolve(results);
+//             }
+//         });
+//     });
+// }
 
 async function insertChatHistory(messageLog, userId) {
     try {
@@ -100,6 +100,43 @@ async function insertChatUsageHistory(data) {
     }
 }
 
+async function insertUserChatSetting(userId, role) {
+    try {
+        const query = `INSERT INTO
+                    RG_CHAT_SETTING (ID, USER_ID, ROLE, CREATE_DATE)
+                VALUES
+                    (
+                        NULL,
+                        ?,
+                        ?,
+                        ?
+                    )`;
+        const values = [
+            userId,
+            role,
+            Utils.currentTimeStamp(),
+        ];
+        const results = await executeQuery(query, values);
+        return results;
+    } catch (error_) {
+        try {
+            const query = `UPDATE RG_CHAT_SETTING SET
+            ROLE = ?,
+            CREATE_DATE = ?
+            WHERE USER_ID = ?`;
+            const values = [
+                role,
+                Utils.currentTimeStamp(),
+                userId,
+            ];
+            const results = await executeQuery(query, values);
+            return results;
+        } catch (error) {
+            console.error('Error executing MySQL query:', error);
+        }
+    }
+}
+
 async function getChatHistories() {
     try {
         const query = 'SELECT * FROM RG_CHAT_HISTORY';
@@ -108,7 +145,18 @@ async function getChatHistories() {
         return results;
     } catch (error) {
         console.error('Error executing MySQL query:', error);
-        throw error;
+    }
+}
+
+async function getUserChatSetting(userId) {
+    try {
+        const query = 'SELECT * FROM RG_CHAT_SETTING WHERE USER_ID = ?';
+        const values = [userId];
+        const results = await executeQuery(query, values);
+        return results.length > 0 ? results[0] : null;
+    } catch (error) {
+        console.error('Error executing MySQL query:', error);
+        return null;
     }
 }
 
@@ -129,7 +177,6 @@ async function sumChatUsageHistoryGroupByModel() {
         return results;
     } catch (error) {
         console.error('Error executing MySQL query:', error);
-        throw error;
     }
 }
 
@@ -146,8 +193,12 @@ process.on('SIGINT', () => {
 });
 
 module.exports = {
+    /* finding */
+    getUserChatSetting,
     getChatHistories,
     sumChatUsageHistoryGroupByModel,
+    /* update */
     insertChatHistory,
     insertChatUsageHistory,
+    insertUserChatSetting,
 };

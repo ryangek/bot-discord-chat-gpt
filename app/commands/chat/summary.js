@@ -1,6 +1,5 @@
 const {
     SlashCommandBuilder,
-    ApplicationCommandOptionType,
 } = require('discord.js');
 const Table = require('table');
 const { sumChatUsageHistoryGroupByModel } = require('../../db');
@@ -8,11 +7,8 @@ const { sumChatUsageHistoryGroupByModel } = require('../../db');
 module.exports = {
     cooldown: 5,
     data: new SlashCommandBuilder()
-        .setName('chat')
-        .setDescription('Show information usage ChatGPT')
-        .addSubcommand((option) =>
-            option.setName('summary').setDescription('Get usage summary')
-        ),
+        .setName('summary')
+        .setDescription('Show information usage ChatGPT'),
     async execute(interaction) {
         let message = 'Sorry, I cannot working right now !';
         try {

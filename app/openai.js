@@ -1,6 +1,5 @@
 const { Configuration, OpenAIApi } = require('openai');
-const { Tokenizer } = require('tiktoken');
-const { insertChatHistory, insertChatUsageHistory } = require('./db');
+const { insertChatHistory, insertChatUsageHistory, getUserChatSetting } = require('./db');
 const chatModel = process.env.GPT_MODEL;
 console.log(`The system is using OpenAI Model...<< ${chatModel} >>`);
 
@@ -10,8 +9,9 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 async function chatGPT(message, discord) {
+    const chatSetting = await getUserChatSetting(discord.user.id);
     let messageLog = [
-        { role: 'system', content: 'You are a friendly chatbot.' },
+        { role: 'system', content: chatSetting ? chatSetting.ROLE : 'You are a friendly chatbot.' },
     ];
 
     // let prevMessages = await message.channel.messages.fetch({
