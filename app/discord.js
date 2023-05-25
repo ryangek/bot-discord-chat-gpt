@@ -1,6 +1,13 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, Events, IntentsBitField, GatewayIntentBits, ApplicationCommandOptionType } = require('discord.js');
+const {
+    Client,
+    Collection,
+    Events,
+    IntentsBitField,
+    GatewayIntentBits,
+    ApplicationCommandOptionType,
+} = require('discord.js');
 const discord = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -20,7 +27,9 @@ const commandFolders = fs.readdirSync(foldersPath);
 
 for (const folder of commandFolders) {
     const commandsPath = path.join(foldersPath, folder);
-    const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+    const commandFiles = fs
+        .readdirSync(commandsPath)
+        .filter((file) => file.endsWith('.js'));
     for (const file of commandFiles) {
         const filePath = path.join(commandsPath, file);
         const command = require(filePath);
@@ -29,7 +38,9 @@ for (const folder of commandFolders) {
             discord.commands.set(command.data.name, command);
             commands.push(command.data.toJSON());
         } else {
-            console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+            console.log(
+                `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
+            );
         }
     }
 }
@@ -38,13 +49,15 @@ function messageCreate(func) {
     discord.on(Events.MessageCreate, func);
 }
 
-discord.on(Events.InteractionCreate, async interaction => {
+discord.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
     const command = interaction.client.commands.get(interaction.commandName);
 
     if (!command) {
-        console.error(`No command matching ${interaction.commandName} was found.`);
+        console.error(
+            `No command matching ${interaction.commandName} was found.`
+        );
         return;
     }
 
@@ -53,9 +66,15 @@ discord.on(Events.InteractionCreate, async interaction => {
     } catch (error) {
         console.error(error);
         if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+            await interaction.followUp({
+                content: 'There was an error while executing this command!',
+                ephemeral: true,
+            });
         } else {
-            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+            await interaction.reply({
+                content: 'There was an error while executing this command!',
+                ephemeral: true,
+            });
         }
     }
 });
@@ -74,5 +93,5 @@ discord.once(Events.ClientReady, async (c) => {
 
 module.exports = {
     discord,
-    messageCreate
+    messageCreate,
 };

@@ -43,15 +43,14 @@ async function chatGPT(message, discord) {
     });
 
     if (result && result.data) {
-
         insertChatUsageHistory(result.data);
-        
+
         return result.data.choices[0].message;
     } else {
-        return "Apologize, I cannot answer this question right now !";
+        return 'Apologize, I cannot answer this question right now !';
     }
 }
 
 module.exports = {
-    chatGPT
+    chatGPT,
 };

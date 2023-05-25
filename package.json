@@ -18,8 +18,8 @@
         "dotenv": "^16.0.3",
         "mysql2": "^3.3.2",
         "openai": "^3.2.1",
-        "string-table": "^0.1.5",
-        "table": "^6.8.1"
+        "table": "^6.8.1",
+        "tiktoken": "^1.0.7"
     },
     "devDependencies": {
         "eslint": "^8.40.0",

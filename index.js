@@ -4,7 +4,11 @@ const { chatGPT } = require('./app/openai');
 
 messageCreate(async (message) => {
     if (message.author.bot) return;
-    if (process.env.CHANNEL_ID_LIST && !process.env.CHANNEL_ID_LIST.split(",").includes(message.channelId)) return;
+    if (
+        process.env.CHANNEL_ID_LIST &&
+        !process.env.CHANNEL_ID_LIST.split(',').includes(message.channelId)
+    )
+        return;
     if (message.content.startsWith(process.env.COMMAND_PREFIX)) return;
 
     await message.channel.sendTyping();

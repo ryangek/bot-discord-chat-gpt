@@ -8,7 +8,7 @@ const connection = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
-    database: process.env.DB_NAME
+    database: process.env.DB_NAME,
 });
 
 async function executeQuery(query, values = []) {
@@ -85,7 +85,14 @@ async function insertChatUsageHistory(data) {
                     ?,
                     ?
                 )`;
-        const values = [model, usage.prompt_tokens, usage.completion_tokens, usage.total_tokens, usage.total_tokens * tokenRate, Utils.currentTimeStamp()];
+        const values = [
+            model,
+            usage.prompt_tokens,
+            usage.completion_tokens,
+            usage.total_tokens,
+            usage.total_tokens * tokenRate,
+            Utils.currentTimeStamp(),
+        ];
         const results = await executeQuery(query, values);
         return results;
     } catch (error) {
@@ -138,10 +145,9 @@ process.on('SIGINT', () => {
     });
 });
 
-
 module.exports = {
     getChatHistories,
     sumChatUsageHistoryGroupByModel,
     insertChatHistory,
-    insertChatUsageHistory
-}
+    insertChatUsageHistory,
+};

@@ -1,7 +1,7 @@
-const { currentTimeStamp } = require("./date");
+const { currentTimeStamp } = require('./date');
 
 const utils = {
-    currentTimeStamp
-}
+    currentTimeStamp,
+};
 
 module.exports = utils;
