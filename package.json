@@ -16,7 +16,10 @@
     "dependencies": {
         "discord.js": "^14.11.0",
         "dotenv": "^16.0.3",
-        "openai": "^3.2.1"
+        "mysql2": "^3.3.2",
+        "openai": "^3.2.1",
+        "string-table": "^0.1.5",
+        "table": "^6.8.1"
     },
     "devDependencies": {
         "eslint": "^8.40.0",
