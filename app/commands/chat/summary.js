@@ -15,7 +15,7 @@ module.exports = {
             const result = await sumChatUsageHistoryGroupByModel();
 
             const data = [
-                ['Model', 'Prompt Tokens', 'Completion Tokens', 'Total Tokens'],
+                ['Model', 'Prompt Tokens', 'Completion Tokens', 'Total Tokens', 'Total Price'],
             ];
             if (result.length > 0) {
                 for (let i = 0; i < result.length; i++) {
