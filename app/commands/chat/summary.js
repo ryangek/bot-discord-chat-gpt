@@ -24,7 +24,7 @@ module.exports = {
                         result[i].USAGE_PROMPT_TOKEN,
                         result[i].USAGE_COMPLETION_TOKEN,
                         result[i].USAGE_TOTAL_TOKEN,
-                        `$${result[i].USAGE_PRICE}`,
+                        `\$${result[i].USAGE_PRICE}`,
                     ]);
                 }
             }
