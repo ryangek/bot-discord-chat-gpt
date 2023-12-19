@@ -1,38 +1,51 @@
 const { Configuration, OpenAIApi } = require('openai');
-const { insertChatHistory, insertChatUsageHistory, getUserChatSetting } = require('./db');
-const chatModel = process.env.GPT_MODEL;
+const { GPT_MODEL, GPT_KEY } = require('../config.json');
+const chatModel = GPT_MODEL;
 console.log(`The system is using OpenAI Model...<< ${chatModel} >>`);
 
 const configuration = new Configuration({
-    apiKey: process.env.GPT_KEY,
+    apiKey: GPT_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
 async function chatGPT(message) {
-    const chatSetting = await getUserChatSetting(message.author.id);
-    let messageLog = [
-        { role: 'system', content: chatSetting ? chatSetting.ROLE : 'You are a friendly chatbot.' },
-    ];
-    
-    messageLog.push({
-        role: 'user',
-        content: message.content,
-    });
-
-    insertChatHistory(messageLog, message.author.id);
-
-    const result = await openai.createChatCompletion({
-        model: chatModel,
-        messages: messageLog,
-    });
-
-    if (result && result.data) {
-        insertChatUsageHistory(result.data);
-
-        return result.data.choices[0].message;
-    } else {
-        return 'Apologize, I cannot answer this question right now !';
+    let content = '';
+    if (message.content.includes('TH/')) {
+        content =
+            'You will be provided with a sentence in English, and your task is to translate it into Thai.';
+    } else if (message.content.includes('EN/')) {
+        content =
+            'You will be provided with a sentence in Thai, and your task is to translate it into English.';
     }
+
+    if (content) {
+        console.log(`Content: ${content}`);
+        let messageLog = [
+            {
+                role: 'system',
+                content: content,
+            },
+        ];
+
+        messageLog.push({
+            role: 'user',
+            content: message.content,
+        });
+
+        const result = await openai.createChatCompletion({
+            model: chatModel,
+            messages: messageLog,
+        });
+
+        if (result && result.data) {
+            console.log(result.data.choices[0].message);
+            return result.data.choices[0].message.content.substring(3);
+        } else {
+            return 'Apologize, I cannot translate this content right now !';
+        }
+    }
+
+    return 'Apologize, I cannot translate this content right now !';
 }
 
 module.exports = {
