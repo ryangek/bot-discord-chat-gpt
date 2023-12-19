@@ -11,9 +11,8 @@ messageCreate(async (message) => {
         return;
     if (message.content.startsWith(COMMAND_PREFIX)) return;
 
-    await message.channel.sendTyping();
-
     if (message.content.includes('TH/') || message.content.includes('EN/')) {
+        await message.channel.sendTyping();
         message.reply(await chatGPT(message));
     }
 });
