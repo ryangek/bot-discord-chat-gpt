@@ -9,11 +9,15 @@ messageCreate(async (message) => {
         !CHANNEL_ID_LIST.split(',').includes(message.channelId)
     )
         return;
-    if (message.content.startsWith(COMMAND_PREFIX)) return;
-
-    if (message.content.includes('TH/') || message.content.includes('EN/')) {
+    if (message.content.startsWith('TH/') || message.content.startsWith('EN/')) {
         await message.channel.sendTyping();
-        message.reply(await chatGPT(message));
+        let rule = "";
+        if (message.content.startsWith('TH/')) {
+            rule = "You will be provided with a sentence in English, and your task is to translate it into Thai. Don't include TH/ or EN/";
+        } else if (message.content.startsWith('EN/')) {
+            rule = "You will be provided with a sentence in Thai, and your task is to translate it into English. Don't include TH/ or EN/";
+        }
+        message.reply(await chatGPT(message, rule));
     }
 });
 
