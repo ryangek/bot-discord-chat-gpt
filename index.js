@@ -1,4 +1,4 @@
-const { TOKEN, CHANNEL_ID_LIST, COMMAND_PREFIX } = require('./config.json');
+const { TOKEN, CHANNEL_ID_LIST } = require('./config.json');
 const { discord, messageCreate } = require('./app/discord');
 const { chatGPT } = require('./app/openai');
 
@@ -17,7 +17,7 @@ messageCreate(async (message) => {
         } else if (message.content.startsWith('EN/')) {
             rule = "You will be provided with a sentence in Thai, and your task is to translate it into English. Don't include TH/ or EN/";
         }
-        message.reply(await chatGPT(message, rule));
+        message.reply(`<@${message.author.id}>: ${await chatGPT(message, rule)}`);
     }
 });
 
