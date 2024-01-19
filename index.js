@@ -15,7 +15,15 @@ messageCreate(async (message) => {
     if (message.content.startsWith('Q/')) {
         await message.channel.sendTyping();
         const rule = "You are an expert in technology.";
-        message.reply(`<@${message.author.id}>: ${await chatGPT(message, rule)}`);
+        const ct = await chatGPT(message, rule);
+        const te = new TextEncoder();
+        message.reply({ 
+            content: "Result :", 
+            files: [{ 
+                name: 'result.md', 
+                attachment: Buffer.from(te.encode(`${ct}`))
+            }] 
+        });
     }
 });
 
