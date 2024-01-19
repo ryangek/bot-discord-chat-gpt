@@ -16,14 +16,18 @@ messageCreate(async (message) => {
         await message.channel.sendTyping();
         const rule = "You are an expert in technology.";
         const ct = await chatGPT(message, rule);
-        const te = new TextEncoder();
-        message.reply({ 
-            content: "Result :", 
-            files: [{ 
-                name: 'result.md', 
-                attachment: Buffer.from(te.encode(`${ct}`))
-            }] 
-        });
+        if (ct.length > 2000) {
+            const te = new TextEncoder();
+            message.reply({
+                content: `<@${message.author.id}>: `,
+                files: [{
+                    name: 'result.md',
+                    attachment: Buffer.from(te.encode(`${ct}`))
+                }]
+            });
+        } else {
+            message.reply(`<@${message.author.id}>: ${await chatGPT(message, rule)}`);
+        }
     }
 });
 
